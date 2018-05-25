@@ -55,20 +55,20 @@ class KnightPathFinder
     
   end
   
-  # def bfs(target_value)
-  #   queue = [self]
-  #   until queue.empty?
-  #     node = queue.shift
-  #     return node if node.value == target_value
-  #     node.children.each do |child|
-  #       queue << child 
-  #     end
-  #   end
-  #   nil
-  # end
+  def find_path(end_pos)
+    build_move_tree
+    target_node = move_tree.bfs(end_pos)
+    trace_path_back(target_node)
+  end
   
-  def find_path
-    
+  def trace_path_back(node)
+    path_arr = [node.value]
+    until path_arr.include?(pos)
+      parent = node.parent
+      path_arr << parent.value
+      node = parent
+    end
+    path_arr.reverse
   end
   
   private
@@ -78,9 +78,6 @@ class KnightPathFinder
   end
 end
 
-
-kpf = KnightPathFinder.new([0,0])
-p kpf.build_move_tree
-# p KnightPathFinder.valid_moves([0,0])
-# p KnightPathFinder.valid_moves([5, 5]).uniq
-# p KnightPathFinder.valid_moves([7, 7])
+kpf = KnightPathFinder.new([0, 0])
+# p kpf.find_path([7, 6]) # => [[0, 0], [1, 2], [2, 4], [3, 6], [5, 5], [7, 6]]
+p kpf.find_path([6, 2]) # => [[0, 0], [1, 2], [2, 0], [4, 1], [6, 2]]
